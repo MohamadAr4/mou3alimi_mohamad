@@ -1,1 +1,49 @@
 @import "tailwindcss";
+
+:root {
+  --primary: 52 152 219;    /* #3498db - أماسي */
+  --secondary: 39 174 96;   /* #27ae60 - صفيز */
+  --accent: 243 156 18;     /* #f39c12 - مصبز */
+  --background: 245 246 250; /* #f5f6fa - خلفية */
+  --text: 44 62 80;         /* #2c3e50 - النص الرئيسي */
+  --error: 231 76 60;       /* #e74c3c - للأخطاء */
+  --rating: 241 196 15;     /* #f1c40f - التقدير */
+}
+
+@theme {
+  --color-primary: rgb(var(--primary));
+  --color-secondary: rgb(var(--secondary));
+  --color-accent: rgb(var(--accent));
+  --color-background: rgb(var(--background));
+  --color-text: rgb(var(--text));
+  --color-error: rgb(var(--error));
+  --color-rating: rgb(var(--rating));
+}
+
+/* Custom components */
+.input-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid theme("colors.gray.200");
+  border-radius: 0.5rem;
+  &:focus {
+    outline: 2px solid theme("colors.accent");
+    outline-offset: 2px;
+  }
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  padding: 0.75rem 1rem;
+  background-color: theme("colors.primary");
+  color: white;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  box-shadow: theme("boxShadow.md");
+  &:hover {
+    background-color: oklch(from theme("colors.primary") l c h / 0.9);
+    box-shadow: theme("boxShadow.lg");
+    transform: translateY(-0.125rem);
+  }
+  transition: all 0.3s ease;
+}
