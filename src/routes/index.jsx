@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
-import Home from '../pages/dashboard/home';
-import Login from '../pages/auth/login';
+import Dashboard from '../pages/dashboard/Dashboard';
+import Login from '../pages/auth/Login.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -14,7 +14,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Home />,
+        element: <Dashboard />,
       },
     ],
   },
