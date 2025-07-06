@@ -4,16 +4,6 @@ import Aside from "../../components/dashboard/aside/Aside";
 import Card from "../../components/dashboard/card/Card";
 import Footer from "../../components/footer/Footer";
 
-ChartJS.register(
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title
-);
-
 const Dashboard = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(true);
 
