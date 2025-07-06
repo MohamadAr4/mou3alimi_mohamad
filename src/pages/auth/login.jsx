@@ -22,7 +22,7 @@ function Login() {
     });
   }, []);
 
-  const checkvalidInputs = () => {
+  const checkvalidInputss = () => {
     if(!email.includes("@gmail.com")){
       setHasError(true);
       setError("");
