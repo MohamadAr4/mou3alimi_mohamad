@@ -1,14 +1,4 @@
 import React, { useState } from "react";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-} from "chart.js";
 import Header from "../../components/dashboard/header/Header";
 import Aside from "../../components/dashboard/aside/Aside";
 import Card from "../../components/dashboard/card/Card";
