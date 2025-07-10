@@ -1,16 +1,8 @@
-import React, { useState } from "react";
-import Header from "../../components/dashboard/header/Header";
-import Aside from "../../components/dashboard/aside/Aside";
+import React from "react";
+import DashboardLayout from "./DashboardLayout";
 import Card from "../../components/dashboard/card/Card";
-import Footer from "../../components/footer/Footer";
 
 const Dashboard = () => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
-
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-  };
-
   const cards = [
     {
       color: "[#3498db]",
@@ -37,66 +29,21 @@ const Dashboard = () => {
       path: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
     },
   ];
-  
+
   return (
-    <div className="flex flex-col min-h-screen bg-[#f5f6fa]" dir="rtl">
-      {/* Header */}
-      <Header toggleDrawer={toggleDrawer} />
-
-      <div className="flex flex-1">
-        <Aside isDrawerOpen={isDrawerOpen}></Aside>
-
-        {/* Main Content */}
-        <main className="flex-1 p-6">
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            {cards.map((card) => {
-              return (
-                <Card
-                  color={card.color}
-                  title={card.title}
-                  data={card.data}
-                  path={card.path}
-                />
-              );
-            })}
-          </div>
-          {/* Charts Section */}
-          {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-bold mb-4">توزيع المواد الدراسية</h3>
-              <div className="h-64">
-                <Pie data={pieData} options={{ maintainAspectRatio: false }} />
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-bold mb-4">إحصائيات الشهر</h3>
-              <div className="h-64">
-                <Bar 
-                  data={barData} 
-                  options={{ 
-                    maintainAspectRatio: false,
-                    scales: {
-                      x: {
-                        grid: {
-                          display: false
-                        }
-                      },
-                      y: {
-                        beginAtZero: true,
-                        max: 100
-                      }
-                    }
-                  }} 
-                />
-              </div>
-            </div>
-          </div> */}
-        </main>
+    <DashboardLayout>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        {cards.map((card, index) => (
+          <Card
+            key={index}
+            color={card.color}
+            title={card.title}
+            data={card.data}
+            path={card.path}
+          />
+        ))}
       </div>
-      <Footer />
-    </div>
+    </DashboardLayout>
   );
 };
 
