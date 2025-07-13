@@ -2,7 +2,7 @@ import Navigation_user from "./navigation_user/Navigation_user";
 
 function Header({ toggleDrawer }) {
   return (
-    <header className="bg-gradient-to-r from-[rgb(var(--primary))] to-[rgb(var(--secondary))] text-white shadow-lg">
+    <header className="bg-gradient-to-r from-[rgb(var(--primary))] to-[rgb(var(--secondary))] text-white shadow-lg" >
       <div className="container mx-auto py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button
