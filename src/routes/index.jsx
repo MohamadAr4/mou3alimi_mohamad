@@ -6,6 +6,8 @@ import Accounts from "../pages/accounts/Accounts";
 import Edu_services from "../pages/edu-services/Edu_services";
 import Ads from "../pages/ads/Ads";
 import AdDetails from "../pages/ads/ad_detail/AdDetails";
+import FinanceReport from "../pages/reports/fianiceReport/FianiceReport";
+import ActivityReport from "../pages/reports/activityReport/ActivityReport";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +38,14 @@ export const router = createBrowserRouter([
         path: "/ads/:id", // Dynamic route for ad details
         element: <AdDetails />,
       },
+      {
+        path : "/reports/financial",
+        element : <FinanceReport></FinanceReport>
+      },
+      {
+        path : '/reports/activity',
+        element : <ActivityReport></ActivityReport>
+      }
     ],
   },
   // {
