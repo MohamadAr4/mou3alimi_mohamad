@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useAuthStore } from "../../../stores/auth.store";
 
 function Aside({ isDrawerOpen }) {
+
+  const {logout} = useAuthStore();
   const navContent = [
     {
       title: "الصفحة الرئيسية",
@@ -16,6 +19,11 @@ function Aside({ isDrawerOpen }) {
       title: "الخدمات التعليمية",
       svg_path: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253",
       path: "/edu-services",
+    },
+      {
+      title: "المواد الدراسية",
+      svg_path: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253",
+      path: "/subjects",
     },
     {
       title: "الاعلانات",
@@ -58,6 +66,12 @@ function Aside({ isDrawerOpen }) {
       [title]: !prev[title]
     }));
   };
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    logout();
+  }
+
 
   return (
     <aside
@@ -182,7 +196,7 @@ function Aside({ isDrawerOpen }) {
               />
             </svg>
             {isDrawerOpen && (
-              <span className="mr-3 whitespace-nowrap text-[rgb(var(--error))]">
+              <span className="mr-3 whitespace-nowrap text-[rgb(var(--error))]" onClick={(e)=> handleLogout(e)}>
                 تسجيل الخروج
               </span>
             )}

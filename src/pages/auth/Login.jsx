@@ -6,13 +6,11 @@ import "aos/dist/aos.css";
 
 function Login() {
   const navigate = useNavigate();
-  const { login } = useAuthStore();
+  const { login, error: authError, isLoading: authLoading } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
-  const [email , setEmail] = useState("");
-  const [password , setPassword] = useState("");
-  const [hasError , setHasError] = useState(false);
-  const [error , setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [localError, setLocalError] = useState("");
 
   useEffect(() => {
     AOS.init({
@@ -22,27 +20,29 @@ function Login() {
     });
   }, []);
 
-  const checkvalidInputss = () => {
-    if(!email.includes("@gmail.com")){
-      setHasError(true);
-      setError("");
-    }
-    if(password.length < 3){
-      setHasError(true);
-      setError("يجب ان تحوي كلمة السر على الاقل ثلاث  محارف")
-    }
-  }
-
   const handleLogin = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    setLocalError("");
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    if (!email || !password) {
+      setLocalError("الرجاء إدخال البريد الإلكتروني وكلمة المرور");
+      return;
+    }
 
-    login({ role: "super-admin" });
-    navigate("/");
+    try {
+      const credentials = {
+        phone_number: email,
+        password: password,
+      };
+
+      await login(credentials);
+      navigate("/");
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
+
+  const errorToDisplay = authError || localError;
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-background">
@@ -167,6 +167,26 @@ function Login() {
             </p>
           </div>
 
+          {/* Error Message */}
+          {errorToDisplay && (
+            <div 
+              className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-md"
+              data-aos="fade-down"
+              data-aos-delay="100"
+            >
+              <div className="flex items-center">
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <p className="font-medium">{errorToDisplay}</p>
+              </div>
+            </div>
+          )}
+
           {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-6">
             {/* Email Field */}
@@ -179,10 +199,13 @@ function Login() {
               </label>
               <div className="relative">
                 <input
-                  type="email"
+                  type="text"
                   id="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setLocalError("");
+                  }}
                   className="w-full px-4 py-3 bg-background/50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-200"
                   placeholder="example@domain.com"
                   dir="rtl"
@@ -221,7 +244,10 @@ function Login() {
                   className="w-full px-4 py-3 bg-background/50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-200"
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setLocalError("");
+                  }}
                   dir="rtl"
                   required
                 />
@@ -274,12 +300,12 @@ function Login() {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={authLoading}
               className={`w-full py-3 px-4 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-lg shadow-md transition-all duration-300 ${
-                isLoading ? "opacity-80" : "hover:shadow-lg hover:scale-[1.02]"
+                authLoading ? "opacity-80" : "hover:shadow-lg hover:scale-[1.02]"
               }`}
             >
-              {isLoading ? (
+              {authLoading ? (
                 <div className="flex items-center justify-center space-x-2">
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                   <span>جاري التحميل...</span>

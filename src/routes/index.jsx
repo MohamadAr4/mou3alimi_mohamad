@@ -9,6 +9,7 @@ import AdDetails from "../pages/ads/ad_detail/AdDetails";
 import FinanceReport from "../pages/reports/fianiceReport/FianiceReport";
 import ActivityReport from "../pages/reports/activityReport/ActivityReport";
 import TechSupport from "../pages/tech-support/TechSupport.jsx";
+import Subjects from "../pages/subjects/Subjects.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -50,6 +51,10 @@ export const router = createBrowserRouter([
       {
         path : '/tech-support',
         element: <TechSupport></TechSupport>
+      },
+      {
+        path : '/subjects',
+        element : <Subjects></Subjects>
       }
     ],
   },
