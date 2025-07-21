@@ -1,37 +1,36 @@
-import React, { useState, useEffect } from "react";
-import { FiTrash2, FiX } from "react-icons/fi";
-import axios from "axios";
-import { BASE_URL } from "../../stores/contants";
+import { useState, useEffect }   from "react";
+import axios                     from "axios";
+import { BASE_URL }              from "../../stores/contants";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import DashboardLayout from "../dashboard/DashboardLayout";
-import Loader from "../../components/loader/Loader";
-import Header from "./components/header/Header";
-import Table from "./components/table/Table";
-import ShowModal from "./components/Modals/ShowModal";
-import AddModal from "./components/Modals/AddModal";
-import EditModal from "./components/Modals/EditModal";
-import DeleteModal from "./components/Modals/DeleteModal";
+import Loader          from "../../components/loader/Loader";
+import Header          from "./components/header/Header";
+import Table           from "./components/table/Table";
+import ShowModal       from "./components/Modals/ShowModal";
+import AddModal        from "./components/Modals/AddModal";
+import EditModal       from "./components/Modals/EditModal";
+import DeleteModal     from "./components/Modals/DeleteModal";
+import "react-toastify/dist/ReactToastify.css";
 
 function Classes() {
   // State for classes and subjects
-  const [classes, setClasses] = useState([]);
-  const [subjects, setSubjects] = useState([]);
+  const [classes  , setClasses  ] = useState([]);
+  const [subjects , setSubjects ] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Modal states
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isViewModalOpen  , setIsViewModalOpen  ] = useState(false);
+  const [isAddModalOpen   , setIsAddModalOpen   ] = useState(false);
+  const [isEditModalOpen  , setIsEditModalOpen  ] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   // Current selected class
-  const [currentClass, setCurrentClass] = useState(null);
-  const [newClassName, setNewClassName] = useState("");
+  const [currentClass , setCurrentClass ] = useState(null);
+  const [newClassName , setNewClassName ] = useState("");
   const [editClassName, setEditClassName] = useState("");
 
   // Selected subjects for add/edit
-  const [selectedSubjects, setSelectedSubjects] = useState([]);
+  const [selectedSubjects    , setSelectedSubjects    ] = useState([]);
   const [editSelectedSubjects, setEditSelectedSubjects] = useState([]);
 
   // View class details
@@ -39,25 +38,21 @@ function Classes() {
     setCurrentClass(classItem);
     setIsViewModalOpen(true);
   };
-
   // Open add modal
   const openAddModal = () => {
     setNewClassName("");
     setSelectedSubjects([]);
     setIsAddModalOpen(true);
   };
-
   // Open edit modal
   const openEditModal = () => {
     setIsEditModalOpen(true);
   };
-
   // Open delete modal
   const openDeleteModal = (classItem) => {
     setCurrentClass(classItem);
     setIsDeleteModalOpen(true);
   };
-
   // Close all modals
   const closeModal = () => {
     setIsViewModalOpen(false);
@@ -66,7 +61,6 @@ function Classes() {
     setIsDeleteModalOpen(false);
     setCurrentClass(null);
   };
-
   // Handle subject selection
   const handleSubjectSelect = (subjectId) => {
     setSelectedSubjects((prev) =>
@@ -75,7 +69,6 @@ function Classes() {
         : [...prev, subjectId]
     );
   };
-
   // Handle edit subject selection
   const handleEditSubjectSelect = (subjectId) => {
     setEditSelectedSubjects((prev) =>
@@ -84,7 +77,6 @@ function Classes() {
         : [...prev, subjectId]
     );
   };
-
   // Add new class done
   const handleAddClass = async () => {
     try {
@@ -118,7 +110,6 @@ function Classes() {
       }
     }
   };
-
   // Edit class Done
   const handleEditClass = async () => {
     try {
