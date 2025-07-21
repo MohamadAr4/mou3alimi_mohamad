@@ -10,6 +10,7 @@ import FinanceReport from "../pages/reports/fianiceReport/FianiceReport";
 import ActivityReport from "../pages/reports/activityReport/ActivityReport";
 import TechSupport from "../pages/tech-support/TechSupport.jsx";
 import Subjects from "../pages/subjects/Subjects.jsx";
+import Classes from "../pages/classes/Classes.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ export const router = createBrowserRouter([
       {
         path : '/subjects',
         element : <Subjects></Subjects>
+      },
+      {
+        path : '/classes',
+        element : <Classes></Classes>
       }
     ],
   },
