@@ -1,6 +1,6 @@
 import React from "react";
 import { FiEdit, FiTrash2} from 'react-icons/fi';
-function Table({subjects , openEditModal , handleDeleteSubject }) {
+function Table({subjects , openEditModal , handleDeleteSubject , handleDeleteClick }) {
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
@@ -29,7 +29,7 @@ function Table({subjects , openEditModal , handleDeleteSubject }) {
                     <FiEdit size={16} />
                   </button>
                   <button
-                    onClick={() => handleDeleteSubject(subject.id)}
+                    onClick={() => handleDeleteClick(subject.id , subject.name )}
                     className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200"
                   >
                     <FiTrash2 size={16} />
