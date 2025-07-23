@@ -24,20 +24,6 @@ const transactions = [
     type: "دخل",
   },
   {
-    id: 2,
-    date: "2023-05-02",
-    description: "رواتب المدرسين",
-    amount: 8000,
-    type: "مصروف",
-  },
-  {
-    id: 3,
-    date: "2023-05-03",
-    description: "صيانة الموقع",
-    amount: 1200,
-    type: "مصروف",
-  },
-  {
     id: 4,
     date: "2023-05-04",
     description: "دورة جديدة",
@@ -45,25 +31,11 @@ const transactions = [
     type: "دخل",
   },
   {
-    id: 5,
-    date: "2023-05-05",
-    description: "تسويق",
-    amount: 3000,
-    type: "مصروف",
-  },
-  {
     id: 6,
     date: "2023-05-06",
     description: "اشتراكات الطلاب",
     amount: 9000,
     type: "دخل",
-  },
-  {
-    id: 7,
-    date: "2023-05-07",
-    description: "تطوير النظام",
-    amount: 4500,
-    type: "مصروف",
   },
 ];
 

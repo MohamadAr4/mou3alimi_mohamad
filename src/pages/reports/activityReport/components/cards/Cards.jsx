@@ -19,7 +19,7 @@ function Cards() {
       </div>
       <div className="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-xl border border-green-100">
         <h3 className="text-sm font-medium text-green-600 mb-1">
-          إكمال الدورات
+          مشتركين الحزمات
         </h3>
         <p className="text-2xl font-bold text-gray-800">156</p>
         <p className="text-sm text-green-600 mt-1">↑ 12% عن الأسبوع الماضي</p>
