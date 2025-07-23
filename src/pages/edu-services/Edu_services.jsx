@@ -10,7 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { BASE_URL } from "../../stores/contants";
-import DeleteConfirmationModal from "./components/Modals/DeleteConfirmationModal ";
+import DeleteConfirmationModal from "./components/Modals/DeleteConfirmationModal";
 
 function Edu_services() {
   const [services, setServices] = useState([]);
