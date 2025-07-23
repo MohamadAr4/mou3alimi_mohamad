@@ -34,10 +34,10 @@ function AddSubscriptionPackModal({showAddPackModal , packData ,setPackData , se
                   </label>
                   <input
                     type="number"
-                    name="usageLimit"
-                    value={packData.usageLimit}
+                    name="number"
+                    value={packData.number}
                     onChange={(e) =>
-                      setPackData({ ...packData, usageLimit: e.target.value })
+                      setPackData({ ...packData, number: e.target.value })
                     }
                     className="input-field w-full"
                   />
