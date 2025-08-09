@@ -11,6 +11,7 @@ import ActivityReport from "../pages/reports/activityReport/ActivityReport";
 import TechSupport from "../pages/tech-support/TechSupport.jsx";
 import Subjects from "../pages/subjects/Subjects.jsx";
 import Classes from "../pages/classes/Classes.jsx";
+import Edu_services_suggestions from "../pages/edu-services-suggestions/Edu_services_suggestions.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -38,7 +39,7 @@ export const router = createBrowserRouter([
         element: <Ads />,
       },
       {
-        path: "/ads/:id", // Dynamic route for ad details
+        path: "/ads/:id",
         element: <AdDetails />,
       },
       {
@@ -60,6 +61,10 @@ export const router = createBrowserRouter([
       {
         path : '/classes',
         element : <Classes></Classes>
+      },
+      {
+        path : '/service-suggestions',
+        element : <Edu_services_suggestions></Edu_services_suggestions>
       }
     ],
   },
