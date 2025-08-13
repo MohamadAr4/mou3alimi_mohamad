@@ -1,40 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DashboardLayout from "../dashboard/DashboardLayout";
 import AddButton from "./components/AddButton";
 import Table from "./components/Table";
 import AddModal from "./components/Modals/AddModal";
 import ViewModal from "./components/Modals/ViewModal";
+import axios from "axios";
+import { BASE_URL } from "../../stores/contants";
+import Loader from "../../components/loader/Loader";
+import BanModal from "./components/Modals/BanModal";
+import { toast } from "react-toastify";
 
 function Accounts() {
   // Sample data
-  const [accounts, setAccounts] = useState([
-    {
-      id: 1,
-      name: "محمد أحمد",
-      email: "mohamed@example.com",
-      role: "أستاذ",
-      status: "نشط",
-    },
-    {
-      id: 2,
-      name: "أحمد علي",
-      email: "ahmed@example.com",
-      role: "طالب",
-      status: "غير نشط",
-    },
-    {
-      id: 3,
-      name: "فاطمة حسن",
-      email: "fatima@example.com",
-      role: "أستاذ",
-      status: "نشط",
-    },
-  ]);
-
+  const [accounts, setAccounts] = useState([]);
+  // Loading state
+  const [isLoading, setIsLoading] = useState(true);
   // Modal states
   const [showAddModal, setShowAddModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
+  const [showBanModal, setShowBanModal] = useState(false);
   const [currentAccount, setCurrentAccount] = useState(null);
+  const [banDate, setBanDate] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -68,7 +55,7 @@ function Accounts() {
 
   // View account details
   const handleView = (account) => {
-    setCurrentAccount(account);
+    handleGetAccountById(account.id);
     setShowViewModal(true);
   };
 
@@ -84,38 +71,150 @@ function Accounts() {
     setShowAddModal(true);
   };
 
+  const handleGetAccounts = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`${BASE_URL}users`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (response.status === 200) {
+        setAccounts(response.data.data.list);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error("error fetching accounts : ", error);
+      setIsLoading(false);
+    }
+  };
+
+  const handleGetAccountById = async (id) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`${BASE_URL}users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.status === 200) {
+        setCurrentAccount(response.data.data);
+        setIsLoading(false);
+        console.log("account by id :", response);
+      }
+    } catch (error) {
+      console.error("error fetching account by Id : ", error);
+      setIsLoading(false);
+    }
+  };
+
+  const handleBanAccount = async () => {
+    setIsSubmitting(true);
+    try {
+      const response = await axios.put(
+        `${BASE_URL}users/${currentAccount.id}/ban`,
+        {
+          until_date: banDate,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        setShowBanModal(false);
+        setShowViewModal(false);
+        setIsSubmitting(false);
+        handleGetAccounts();
+        toast.success("تم حظر الحساب بنجاح");
+      }
+    } catch (error) {
+      toast.error("خطأ في حظر الحساب");
+      console.error("error ban an account : ", error);
+    }
+  };
+
+  const handleUnBanAccount = async () => {
+    try {
+      const response = await axios.put(
+        `${BASE_URL}users/${currentAccount.id}/unban`,[],
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        setShowViewModal(false);
+        handleGetAccounts();
+        toast.success("تم حظر الحساب بنجاح");
+      }
+    } catch (error) {
+      toast.error("خطأ في حظر الحساب");
+      console.error("error ban an account : ", error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetAccounts();
+  }, []);
+
   return (
-    <DashboardLayout>
-      <div className="p-6">
-        {/* Header with Add button */}
-        <AddButton setShowAddModal={setShowAddModal}></AddButton>
-        {/* Table  */}
-        <Table
-          accounts={accounts}
-          handleDelete={handleDelete}
-          handleView={handleView}
-          handleEdit={handleEdit}
-        ></Table>
+    <>
+      {isLoading ? (
+        <Loader></Loader>
+      ) : (
+        <DashboardLayout>
+          <div className="p-6">
+            {/* Header with Add button */}
+            <AddButton setShowAddModal={setShowAddModal}></AddButton>
+            {/* Table  */}
+            <Table
+              accounts={accounts}
+              handleDelete={handleDelete}
+              handleView={handleView}
+              handleEdit={handleEdit}
+            ></Table>
 
-        {/* Add Account Modal */}
-        <AddModal
-          currentAccount={currentAccount}
-          formData={formData}
-          handleAddAccount={handleAddAccount}
-          handleInputChange={handleInputChange}
-          setCurrentAccount={setCurrentAccount}
-          setShowAddModal={setShowAddModal}
-          showAddModal={showAddModal}
-        ></AddModal>
+            {/* Add Account Modal */}
+            <AddModal
+              currentAccount={currentAccount}
+              formData={formData}
+              handleAddAccount={handleAddAccount}
+              handleInputChange={handleInputChange}
+              setCurrentAccount={setCurrentAccount}
+              setShowAddModal={setShowAddModal}
+              showAddModal={showAddModal}
+            ></AddModal>
 
-        {/* View Account Modal */}
-        <ViewModal
-          currentAccount={currentAccount}
-          setShowViewModal={setShowViewModal}
-          showViewModal={showViewModal}
-        ></ViewModal>
-      </div>
-    </DashboardLayout>
+            {/* View Account Modal */}
+            <ViewModal
+              currentAccount={currentAccount}
+              setShowViewModal={setShowViewModal}
+              showViewModal={showViewModal}
+              setShowBanModal={setShowBanModal}
+              handleUnBanAccount = {handleUnBanAccount}
+            ></ViewModal>
+            <BanModal
+              isOpen={showBanModal}
+              onClose={setShowViewModal}
+              userName={currentAccount?.full_name}
+              onBanSubmit={handleBanAccount}
+              isSubmitting={isSubmitting}
+              setBanDate={setBanDate}
+
+            ></BanModal>
+          </div>
+        </DashboardLayout>
+      )}
+    </>
   );
 }
 

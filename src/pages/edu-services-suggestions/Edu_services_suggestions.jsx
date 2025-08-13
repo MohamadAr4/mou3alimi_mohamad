@@ -40,13 +40,13 @@ function Edu_services_suggestions() {
 
   // Update suggestion status
   const updateSuggestionStatus = async (status, reason = null) => {
-    setStatusUpdateLoading(true);
     try {
       const response = await axios.post(
-        `${BASE_URL}service-suggestions/${selectedSuggestion.id}/status`,
+        `${BASE_URL}service-suggestions/${selectedSuggestion.id}`,
         {
-          status,
-          reason,
+          _method : "PATCH",
+          status  : status ,
+          reason  : reason ,
         },
         {
           headers: {
@@ -54,26 +54,25 @@ function Edu_services_suggestions() {
           },
         }
       );
-
-      if (response.status === 200) {
+      console.log(response);
+      if (response.status === 204) {
         toast.success(
           `تم ${status === "approved" ? "الموافقة" : "الرفض"} على المقترح بنجاح`
         );
-        setSuggestions(
-          suggestions.map((suggestion) =>
-            suggestion.id === selectedSuggestion.id
-              ? response.data.data
-              : suggestion
-          )
-        );
+        // setSuggestions(
+        //   suggestions.map((suggestion) =>
+        //     suggestion.id === selectedSuggestion.id
+        //       ? response.data.data
+        //       : suggestion
+        //   )
+        // );
+        await getSuggestions();
         closeModal();
       }
     } catch (error) {
       toast.error(
         `فشل في ${status === "approved" ? "الموافقة" : "الرفض"} على المقترح`
       );
-    } finally {
-      setStatusUpdateLoading(false);
     }
   };
 
