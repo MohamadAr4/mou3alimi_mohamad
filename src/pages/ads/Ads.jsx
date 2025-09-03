@@ -1,70 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../dashboard/DashboardLayout";
 import Header from "./components/header/Header";
 import Table from "./components/table/Table";
+import axios from "axios";
+import { BASE_URL } from "../../stores/contants";
 function Ads() {
   const navigate = useNavigate();
 
   // Sample ads data
-  const [ads, setAds] = useState([
-    {
-      id: 1,
-      adNumber: "AD-2023-001",
-      teacherName: "أحمد محمد",
-      service: "الرياضيات المتقدمة",
-      status: "pending", // pending, approved, rejected
-      images: [
-        "../../../assets/ad.jpg",
-        "../../../assets/ad2.jpg",
-        "../../../assets/ad3.jpg",
-        "../../../assets/ad4.jpg",
-      ],
-      details: "إعلان عن دورة الرياضيات المتقدمة لطلاب المرحلة الثانوية",
-    },
-    {
-      id: 2,
-      adNumber: "AD-2023-002",
-      teacherName: "فاطمة علي",
-      service: "اللغة الإنجليزية",
-      status: "pending",
-      images: [
-        "../../../assets/ad.jpg",
-        "../../../assets/ad2.jpg",
-        "../../../assets/ad3.jpg",
-        "../../../assets/ad4.jpg",
-      ],
-      details: "دورة مكثفة لتحسين مهارات المحادثة الإنجليزية",
-    },
-    {
-      id: 2,
-      adNumber: "AD-2023-002",
-      teacherName: "فاطمة علي",
-      service: "اللغة الإنجليزية",
-      status: "pending",
-      images: [
-        "../../../assets/ad.jpg",
-        "../../../assets/ad2.jpg",
-        "../../../assets/ad3.jpg",
-        "../../../assets/ad4.jpg",
-      ],
-      details: "دورة مكثفة لتحسين مهارات المحادثة الإنجليزية",
-    },
-    {
-      id: 2,
-      adNumber: "AD-2023-002",
-      teacherName: "فاطمة علي",
-      service: "اللغة الإنجليزية",
-      status: "pending",
-      images: [
-        "../../../assets/ad.jpg",
-        "../../../assets/ad2.jpg",
-        "../../../assets/ad3.jpg",
-        "../../../assets/ad4.jpg",
-      ],
-      details: "دورة مكثفة لتحسين مهارات المحادثة الإنجليزية",
-    },
-  ]);
+  const [ads, setAds] = useState([]);
 
   const handleView = (adId) => {
     navigate(`/ads/${adId}`);
@@ -73,6 +18,31 @@ function Ads() {
   const handleDelete = (adId) => {
     setAds(ads.filter((ad) => ad.id !== adId));
   };
+
+  const handleGetAds = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}announcements`,{
+        headers : {
+          Authorization : `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      if(response.status === 200){
+        setAds(response.data.data.list);
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const handleDeleteAd = async () => {
+    
+  }
+
+  useEffect(()=>{
+    handleGetAds();
+  },[])
 
   return (
     <DashboardLayout>

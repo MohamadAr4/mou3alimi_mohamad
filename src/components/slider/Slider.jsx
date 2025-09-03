@@ -70,8 +70,7 @@ function Slider({ images, autoPlay = true, interval = 3000 }) {
             >
               <div className="max-w-full max-h-[80vh] overflow-hidden">
                 <img
-                  src={img}
-                  alt={`Slide ${index + 1}`}
+                  src={img.path} alt={`Slide ${index + 1}`}
                   className="object-contain max-h-[80vh] mx-auto"
                   style={{
                     maxWidth: "100%",
@@ -89,7 +88,7 @@ function Slider({ images, autoPlay = true, interval = 3000 }) {
       {images.length > 1 && (
         <>
           <button
-            onClick={isRTL ? nextSlide :prevSlide }
+            onClick={isRTL ? nextSlide : prevSlide}
             className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black/30 text-white p-2 rounded-full hover:bg-black/50 transition-all z-10"
             aria-label="Previous slide"
           >
@@ -128,11 +127,10 @@ function Slider({ images, autoPlay = true, interval = 3000 }) {
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`w-3 h-3 mx-1 rounded-full transition-colors ${
-                currentIndex === index
+              className={`w-3 h-3 mx-1 rounded-full transition-colors ${currentIndex === index
                   ? "bg-[rgb(var(--primary))]"
                   : "bg-gray-300 hover:bg-gray-400"
-              }`}
+                }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}

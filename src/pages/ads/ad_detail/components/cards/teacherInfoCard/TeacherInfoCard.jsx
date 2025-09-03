@@ -10,15 +10,15 @@ function TeacherInfoCard({ad}) {
         <div className="space-y-3">
           <div>
             <p className="text-sm text-amber-500">الاسم</p>
-            <p className="font-medium text-gray-800">{ad.teacherName}</p>
+            <p className="font-medium text-gray-800">{ad.teacher.full_name}</p>
           </div>
           <div>
             <p className="text-sm text-amber-500">رقم الجوال</p>
-            <p className="font-medium text-gray-800">{ad.teacherPhone}</p>
+            <p className="font-medium text-gray-800">{ad.teacher.phone_number}</p>
           </div>
           <div>
             <p className="text-sm text-amber-500">عدد الإعلانات</p>
-            <p className="font-medium text-gray-800">5 إعلانات</p>
+            <p className="font-medium text-gray-800">{ad.teacher.announcements_count}</p>
           </div>
         </div>
       </div>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "../dashboard/DashboardLayout";
-import AddButton from "./components/AddButton";
 import Table from "./components/Table";
 import AddModal from "./components/Modals/AddModal";
 import ViewModal from "./components/Modals/ViewModal";
@@ -8,8 +7,8 @@ import axios from "axios";
 import { BASE_URL } from "../../stores/contants";
 import Loader from "../../components/loader/Loader";
 import BanModal from "./components/Modals/BanModal";
-import { toast } from "react-toastify";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function Accounts() {
   // Sample data
   const [accounts, setAccounts] = useState([]);
@@ -22,6 +21,12 @@ function Accounts() {
   const [currentAccount, setCurrentAccount] = useState(null);
   const [banDate, setBanDate] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemPerPage] = useState(10);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const [totalPages, setTotalPages] = useState([]);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -74,14 +79,18 @@ function Accounts() {
   const handleGetAccounts = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}users`, {
+      const response = await axios.get(`${BASE_URL}users?page=${currentPage}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
+      console.log(response);
       if (response.status === 200) {
         setAccounts(response.data.data.list);
+        setCurrentPage(response.data.data.current_page);
+        setItemPerPage(response.data.data.per_page);
+        setTotalPages(response.data.data.total_pages);
         setIsLoading(false);
       }
     } catch (error) {
@@ -134,6 +143,7 @@ function Accounts() {
         toast.success("تم حظر الحساب بنجاح");
       }
     } catch (error) {
+      setIsSubmitting(false);
       toast.error("خطأ في حظر الحساب");
       console.error("error ban an account : ", error);
     }
@@ -142,7 +152,8 @@ function Accounts() {
   const handleUnBanAccount = async () => {
     try {
       const response = await axios.put(
-        `${BASE_URL}users/${currentAccount.id}/unban`,[],
+        `${BASE_URL}users/${currentAccount.id}/unban`,
+        [],
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -167,20 +178,30 @@ function Accounts() {
   }, []);
 
   return (
-    <>
+    <DashboardLayout>
+      <ToastContainer rtl={true}></ToastContainer>
       {isLoading ? (
         <Loader></Loader>
       ) : (
-        <DashboardLayout>
+        <>
           <div className="p-6">
-            {/* Header with Add button */}
-            <AddButton setShowAddModal={setShowAddModal}></AddButton>
+            {/* Header */}
+            <div className="flex justify-between items-center mb-6">
+              <h1 className="text-2xl font-bold text-[rgb(var(--text))]">
+                الحسابات
+              </h1>
+            </div>
             {/* Table  */}
             <Table
               accounts={accounts}
               handleDelete={handleDelete}
               handleView={handleView}
               handleEdit={handleEdit}
+              currentPage={currentPage}
+              indexOfFirstItem={indexOfFirstItem}
+              indexOfLastItem={indexOfLastItem}
+              setCurrentPage={setCurrentPage}
+              totalPages={totalPages}
             ></Table>
 
             {/* Add Account Modal */}
@@ -200,21 +221,20 @@ function Accounts() {
               setShowViewModal={setShowViewModal}
               showViewModal={showViewModal}
               setShowBanModal={setShowBanModal}
-              handleUnBanAccount = {handleUnBanAccount}
+              handleUnBanAccount={handleUnBanAccount}
             ></ViewModal>
             <BanModal
               isOpen={showBanModal}
-              onClose={setShowViewModal}
+              onClose={()=>{setShowBanModal(false)}}
               userName={currentAccount?.full_name}
               onBanSubmit={handleBanAccount}
               isSubmitting={isSubmitting}
               setBanDate={setBanDate}
-
             ></BanModal>
           </div>
-        </DashboardLayout>
+        </>
       )}
-    </>
+    </DashboardLayout>
   );
 }
 

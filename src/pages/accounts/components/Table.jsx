@@ -1,6 +1,22 @@
 import React from "react";
+import {
+  FiEye,
+  FiCheck,
+  FiX,
+  FiChevronLeft,
+  FiChevronRight,
+} from "react-icons/fi";
 
-function Table({ accounts , handleEdit, handleView }) {
+function Table({
+  accounts,
+  handleEdit,
+  handleView,
+  indexOfFirstItem,
+  indexOfLastItem,
+  setCurrentPage,
+  currentPage,
+  totalPages,
+}) {
   const tableHeaders = [
     {
       id: "name",
@@ -96,7 +112,6 @@ function Table({ accounts , handleEdit, handleView }) {
                         {account.full_name}
                       </p>
                     </div>
-                    
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -186,6 +201,47 @@ function Table({ accounts , handleEdit, handleView }) {
             ))}
           </tbody>
         </table>
+      </div>
+      {/* pagination */}
+      <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+        <div className="text-sm text-gray-500">
+          عرض <span className="font-medium">{indexOfFirstItem + 1}</span> إلى{" "}
+          <span className="font-medium">
+            {Math.min(indexOfLastItem, accounts.length)}
+          </span>{" "}
+          من <span className="font-medium">{accounts.length}</span> نتيجة
+        </div>
+        <div className="flex gap-1">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            <FiChevronLeft />
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`px-3 py-1 border rounded-md text-sm font-medium ${
+                currentPage === page
+                  ? "bg-blue-600 text-white border-blue-600"
+                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            <FiChevronRight />
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -21,17 +21,13 @@ function Header({navigate , ad  , getStatusBadge}) {
           </svg>
         </button>
         <div>
-          <h1 className="text-xl md:text-2xl font-bold text-gray-800">
-            تفاصيل الإعلان{" "}
-            <span className="text-[rgb(var(--primary))]">#{ad.adNumber}</span>
-          </h1>
           <p className="text-sm text-gray-500 mt-1">
-            آخر تحديث: {ad.createdAt}
+            آخر تحديث: {new Date(ad?.updated_at).toLocaleString()}
           </p>
         </div>
       </div>
       <div className="flex items-center gap-3">
-        {getStatusBadge(ad.status)}
+        {getStatusBadge(ad?.status)}
         <div className="hidden md:block w-px h-6 bg-gray-300"></div>
         <button
           onClick={() => navigator.clipboard.writeText(window.location.href)}

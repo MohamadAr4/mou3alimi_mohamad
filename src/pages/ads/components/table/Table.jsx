@@ -10,14 +10,17 @@ function Table({ads , handleView , handleDelete }) {
             key={ad.id}
             className="hover:bg-gray-50/80 transition-colors duration-150"
           >
-            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-[rgb(var(--text))]">
-              {ad.adNumber}
+            <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-[rgb(var(--text)/0.8)]">
+              {ad.teacher_name}
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-[rgb(var(--text)/0.8)]">
-              {ad.teacherName}
+              {ad.title}
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-[rgb(var(--text)/0.8)]">
-              {ad.service}
+              {ad.service.name}
+            </td>
+             <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-[rgb(var(--text)/0.8)]">
+              {ad.status}
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
               <div className="flex gap-3 justify-center">

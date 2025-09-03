@@ -6,13 +6,13 @@ import Charts from "./components/charts/Charts";
 import Table from "./components/table/Table";
 
 const financialData = [
-  { month: "يناير", income: 4000, expenses: 2400 },
-  { month: "فبراير", income: 3000, expenses: 1398 },
-  { month: "مارس", income: 2000, expenses: 9800 },
-  { month: "أبريل", income: 2780, expenses: 3908 },
-  { month: "مايو", income: 1890, expenses: 4800 },
-  { month: "يونيو", income: 2390, expenses: 3800 },
-  { month: "يوليو", income: 3490, expenses: 4300 },
+  { month: "يناير", income: 4000  },
+  { month: "فبراير", income: 3000 },
+  { month: "مارس", income: 2000   },
+  { month: "أبريل", income: 2780  },
+  { month: "مايو", income: 1890   },
+  { month: "يونيو", income: 2390  },
+  { month: "يوليو", income: 3490  },
 ];
 
 const transactions = [

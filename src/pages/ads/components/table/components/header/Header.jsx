@@ -2,15 +2,19 @@ function Header() {
   const headerCells = [
     {
       text: "right",
-      name: "رقم الاعلان",
-    },
-    {
-      text: "right",
       name: "اسم المعلن",
+    },
+     {
+      text: "right",
+      name: "العنوان",
     },
     {
       text: "right",
       name: "الخدمة",
+    },
+    {
+      text: "right",
+      name: "الحالة",
     },
     {
       text: "center",

@@ -1,65 +1,32 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import DashboardLayout from '../dashboard/DashboardLayout';
 
 import Header from "./components/header/Header.jsx";
 import Table from "./components/table/Table.jsx";
 import ComplaintModal from "./components/Modal/ComplaintModal.jsx";
+import axios from 'axios';
+import { BASE_URL } from '../../stores/contants.js';
+import { ResponsiveContainer } from 'recharts';
 
 const TechSupport = () => {
     // Sample complaints data
-    const [complaints, setComplaints] = useState([
-        {
-            id: 1,
-            complainant: 'أحمد محمد',
-            role: 'طالب',
-            date: '2023-05-15',
-            subject: 'مشكلة في الدفع',
-            message: 'لا يمكنني إتمام عملية الدفع للدورة الجديدة، يظهر خطأ عند إدخال بيانات البطاقة',
-            status: 'pending'
-        },
-        {
-            id: 2,
-            complainant: 'سارة عبدالله',
-            role: 'مدرسة',
-            date: '2023-05-14',
-            subject: 'تعليق على الدورة',
-            message: 'أريد إضافة محتوى جديد للدورة الحالية، كيف يمكنني فعل ذلك؟',
-            status: 'pending'
-        },
-        {
-            id: 3,
-            complainant: 'خالد علي',
-            role: 'ولي أمر',
-            date: '2023-05-13',
-            subject: 'استفسار عن التقرير',
-            message: 'كيف يمكنني الحصول على تقرير عن تقدم ابني في الدورة؟',
-            status: 'resolved'
-        },
-    ]);
+    const [complaints, setComplaints] = useState([]);
 
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [replyText, setReplyText] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5;
-
-    // Filter complaints based on search term
-    const filteredComplaints = complaints.filter(complaint =>
-        complaint.complainant.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        complaint.subject.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const [itemsPerPage, setItemPerPage] = useState(5);
 
     // Pagination logic
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredComplaints.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(filteredComplaints.length / itemsPerPage);
+    const [totalPages, setToatalPages] = useState(1);
 
     const openModal = (complaint) => {
-        setSelectedComplaint(complaint);
-        setIsModalOpen(true);
-        setReplyText('');
+        handleGetTicketsById(complaint)
+
     };
 
     const closeModal = () => {
@@ -69,7 +36,7 @@ const TechSupport = () => {
 
     const handleReject = () => {
         setComplaints(complaints.map(c =>
-            c.id === selectedComplaint.id ? {...c, status: 'rejected'} : c
+            c.id === selectedComplaint.id ? { ...c, status: 'rejected' } : c
         ));
         closeModal();
     };
@@ -88,32 +55,171 @@ const TechSupport = () => {
         closeModal();
     };
 
+    const handleGetTickets = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}technical-support-tickets`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            if (response.status === 200) {
+                setComplaints(response.data.data.list);
+                setItemPerPage(response.data.data.per_page);
+                setCurrentPage(response.data.data.current_page);
+                setToatalPages(response.data.data.total_pages);
+                console.log("response", response);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleGetTicketsById = async (complaint) => {
+        try {
+            const response = await axios.get(`${BASE_URL}technical-support-tickets/${complaint.id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            if (response.status === 200) {
+                console.log("getById", response);
+                setSelectedComplaint(response.data.data);
+                setIsModalOpen(true);
+                setReplyText('');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleDeleteTicket = async () => {
+        try {
+            const response = await axios.delete(`${BASE_URL}technical-support-tickets/${selectedComplaint.id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            if (response.status === 204) {
+                await handleGetTickets();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleRespose = async () => {
+        try {
+            const response = await axios.post(`${BASE_URL}technical-support-tickets/${selectedComplaint.id}/ticket-responses`, { response_text: replyText }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
+            if (response.status === 200) {
+                handleGetTickets();
+                closeModal();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    const handleUpdateResponse = async (id, newText) => {
+        try {
+            const res = await axios.put(`${BASE_URL}ticket-responses/${id}`, {
+                response_text: newText,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (res.status === 200) {
+                setSelectedComplaint((prev) => ({
+                    ...prev,
+                    responses: prev.responses.map((r) =>
+                        r.id === id
+                            ? { ...r, response_text: newText, updated_at: new Date().toISOString() }
+                            : r
+                    ),
+                }));
+            } else {
+                console.error("Error updating response:", res.data.message);
+            }
+        } catch (err) {
+            console.error("Update failed:", err);
+        }
+    };
+
+    // Delete response
+    const handleDeleteResponse = async (id) => {
+        try {
+            const res = await axios.delete(`${BASE_URL}ticket-responses/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (res.status === 204) {
+                setSelectedComplaint((prev) => ({
+                    ...prev,
+                    responses: prev.responses.filter((r) => r.id !== id),
+                }));
+            } else {
+                console.error("Error deleting response:", res.data.message);
+            }
+        } catch (err) {
+            console.error("Delete failed:", err);
+        }
+    };
+    const handleChangeStatus = async (id, newStatus) => {
+        try {
+            const res = await axios.patch(`${BASE_URL}technical-support-tickets/${id}/${newStatus}`,[], {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (res.status === 204) {
+                setSelectedComplaint((prev) => ({
+                    ...prev,
+                    status: newStatus,
+                }));
+            } else {
+                console.error("Error changing status:", res.data.message);
+            }
+        } catch (err) {
+            console.error("Status update failed:", err);
+        }
+    };
+
+    useEffect(() => {
+        handleGetTickets();
+    }, [])
+
     return (
         <DashboardLayout>
             <div className="p-4 md:p-6">
                 {/* Header */}
-                <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
-
+                <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
                 {/* Complaints Table */}
                 <Table
                     openModal={openModal}
-                    currentItems={currentItems}
+                    currentItems={complaints}
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
-                    filteredComplaints={filteredComplaints}
+                    filteredComplaints={complaints}
                     indexOfFirstItem={indexOfFirstItem}
                     indexOfLastItem={indexOfLastItem}
-                    totalPages={totalPages}/>
+                    totalPages={totalPages} />
 
                 {/* Complaint Modal */}
                 <ComplaintModal
                     closeModal={closeModal}
                     isModalOpen={isModalOpen}
+                    handleRespose={handleRespose}
                     handleAccept={handleAccept}
+                    handleDeleteResponse={handleDeleteResponse}
+                    handleUpdateResponse={handleUpdateResponse}
+                    handleChangeStatus={handleChangeStatus}
                     handleReject={handleReject}
                     replyText={replyText}
                     selectedComplaint={selectedComplaint}
-                    setReplyText={setReplyText}/>
+                    setReplyText={setReplyText} />
             </div>
         </DashboardLayout>
     );
