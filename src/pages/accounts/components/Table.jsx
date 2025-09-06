@@ -9,7 +9,6 @@ import {
 
 function Table({
   accounts,
-  handleEdit,
   handleView,
   indexOfFirstItem,
   indexOfLastItem,
@@ -171,7 +170,7 @@ function Table({
                   <div className="flex gap-3 justify-center">
                     <button
                       onClick={() => handleView(account)}
-                      className="text-[rgb(var(--primary))] hover:text-[rgb(var(--primary)/0.8)] transition-colors duration-200 flex items-center"
+                      className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -193,7 +192,6 @@ function Table({
                           d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                         />
                       </svg>
-                      عرض
                     </button>
                   </div>
                 </td>

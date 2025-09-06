@@ -123,7 +123,7 @@ function Edu_services() {
       );
 
       if (response.status === 200) {
-        toast.success("Service updated successfully");
+        toast.success("تم تعديل الخدمة بنجاح");
         await fetchServices();
         setShowEditServiceModal(false);
       }
@@ -220,7 +220,7 @@ function Edu_services() {
           },
         }
       );
-      console.log("respoonse form deleting pack" , respone)
+      console.log("respoonse form deleting pack", respone)
       if (respone.status === 204) {
         await fetchServices();
         toast.success("تم حذف الحزمة بنجاح");
@@ -273,7 +273,7 @@ function Edu_services() {
               setCurrentPack={setCurrentPack}
               setShowViewModal={setShowViewModal}
               showViewModal={showViewModal}
-              handleDeleteClick = {handleDeleteClick}
+              handleDeleteClick={handleDeleteClick}
             />
 
             {/* Edit Service Modal */}
@@ -305,10 +305,10 @@ function Edu_services() {
               showAddPackModal={showAddPackModal}
             />
 
-            <DeleteConfirmationModal 
-            isOpen={showDeleteModal}
-            onClose={() => setShowDeleteModal(false)}
-            onConfirm={()=> handleDeletePack()}
+            <DeleteConfirmationModal
+              isOpen={showDeleteModal}
+              onClose={() => setShowDeleteModal(false)}
+              onConfirm={() => handleDeletePack()}
             />
           </div>
         </DashboardLayout>

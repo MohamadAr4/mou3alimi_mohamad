@@ -10,7 +10,7 @@ function Table({subjects , openEditModal , handleDeleteSubject , handleDeleteCli
               <th className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">
                 اسم المادة
               </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">
+              <th className="px-6 py-3 text-xs font-medium text-white uppercase tracking-wider justify-center">
                 الإجراءات
               </th>
             </tr>
@@ -21,7 +21,7 @@ function Table({subjects , openEditModal , handleDeleteSubject , handleDeleteCli
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[rgb(var(--text))]">
                   {subject.name}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex gap-2 justify-end">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex gap-2 justify-center">
                   <button
                     onClick={() => openEditModal(subject)}
                     className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200"

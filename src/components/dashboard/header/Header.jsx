@@ -1,4 +1,3 @@
-import Navigation_user from "./navigation_user/Navigation_user";
 
 function Header({ toggleDrawer }) {
   return (
@@ -23,7 +22,6 @@ function Header({ toggleDrawer }) {
             </span>
           </h1>
         </div>
-        <Navigation_user></Navigation_user>
       </div>
     </header>
   );

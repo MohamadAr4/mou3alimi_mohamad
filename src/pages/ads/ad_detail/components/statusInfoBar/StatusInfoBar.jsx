@@ -18,6 +18,11 @@ function StatusInfoBar({getStatusBadge , ad}) {
           <p className="text-xs font-medium text-indigo-600">الخدمة</p>
           <p className="font-medium text-gray-800">{ad.service.name}</p>
         </div>
+        <div className="hidden md:block w-px h-6 bg-indigo-200"></div>
+        <div>
+          <p className="text-xs font-medium text-indigo-600">السعر</p>
+          <p className="font-medium text-gray-800">{ad.price} ل.س</p>
+        </div>
       </div>
       <button className="text-sm font-medium bg-white px-3 py-1.5 rounded-lg border border-indigo-100 text-indigo-600 hover:bg-indigo-50 hover:text-indigo-700 transition-colors flex items-center gap-1 shadow-sm">
         <svg

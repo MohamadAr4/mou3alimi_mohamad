@@ -1,7 +1,12 @@
 import React from "react";
-
+import {
+  FiEye,
+  FiCheck,
+  FiX,
+  FiChevronLeft,
+  FiChevronRight,
+} from "react-icons/fi";
 function Table({
-  currentItems,
   indexOfFirstItem,
   indexOfLastItem,
   setCurrentPage,
@@ -24,45 +29,38 @@ function Table({
                 التاريخ
               </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">
-                الوصف
+                اسم المستخدم
+              </th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">
+                الخدمة
               </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">
                 المبلغ
               </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">
-                النوع
-              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {currentItems.map((transaction) => (
+            {transactions.map((transaction) => (
               <tr key={transaction.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {transaction.date}
+                  {new Date(transaction.created_at).toLocaleString()}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {transaction.description}
-                </td>
-                <td
-                  className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${
-                    transaction.type === "دخل"
-                      ? "text-green-600"
-                      : "text-red-600"
-                  }`}
-                >
-                  {transaction.amount} ر.س
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                  {transaction.teacher_name}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      transaction.type === "دخل"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full text-gray-500`}
                   >
-                    {transaction.type}
+                    {transaction.name}
                   </span>
                 </td>
+                <td
+                  className={`px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500`}
+                >
+                  {transaction.price} ر.س
+                </td>
+
               </tr>
             ))}
           </tbody>
@@ -83,17 +81,16 @@ function Table({
             disabled={currentPage === 1}
             className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
           >
-            السابق
+            <FiChevronLeft />
           </button>
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
             <button
               key={page}
               onClick={() => setCurrentPage(page)}
-              className={`px-3 py-1 border rounded-md text-sm font-medium ${
-                currentPage === page
+              className={`px-3 py-1 border rounded-md text-sm font-medium ${currentPage === page
                   ? "bg-blue-600 text-white border-blue-600"
                   : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-              }`}
+                }`}
             >
               {page}
             </button>
@@ -105,7 +102,7 @@ function Table({
             disabled={currentPage === totalPages}
             className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
           >
-            التالي
+            <FiChevronRight />
           </button>
         </div>
       </div>

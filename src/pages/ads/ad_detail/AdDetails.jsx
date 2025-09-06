@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import DashboardLayout from "../../dashboard/DashboardLayout";
 import Slider from "../../../components/slider/Slider";
 import Header from "./components/header/Header";
@@ -73,11 +75,13 @@ function AdDetails() {
       if (response.status === 200) {
         setAd(response.data.data);
         setLoading(false);
+        toast.success('تم تغيير حالة الاعلان')
         setIsRejectModalOpen(false); // close modal after success
         setRejectReason(""); // reset reason
       }
     } catch (error) {
       console.error(error);
+      toast.error(error.response.data.message)
       setLoading(false);
     }
   };
@@ -88,6 +92,7 @@ function AdDetails() {
 
   return (
     <DashboardLayout>
+      <ToastContainer></ToastContainer>
       {loading ? <Loader></Loader> : <div className="p-4 md:p-6 max-w-6xl mx-auto">
         <Header ad={ad} getStatusBadge={getStatusBadge} navigate={navigate} />
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">

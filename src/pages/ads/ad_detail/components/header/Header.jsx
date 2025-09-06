@@ -28,27 +28,6 @@ function Header({navigate , ad  , getStatusBadge}) {
       </div>
       <div className="flex items-center gap-3">
         {getStatusBadge(ad?.status)}
-        <div className="hidden md:block w-px h-6 bg-gray-300"></div>
-        <button
-          onClick={() => navigator.clipboard.writeText(window.location.href)}
-          className="text-sm text-gray-600 hover:text-[rgb(var(--primary))] flex items-center gap-1"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
-            />
-          </svg>
-          مشاركة
-        </button>
       </div>
     </div>
   );

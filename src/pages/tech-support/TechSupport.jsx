@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import DashboardLayout from '../dashboard/DashboardLayout';
-
 import Header from "./components/header/Header.jsx";
 import Table from "./components/table/Table.jsx";
 import ComplaintModal from "./components/Modal/ComplaintModal.jsx";
 import axios from 'axios';
 import { BASE_URL } from '../../stores/contants.js';
-import { ResponsiveContainer } from 'recharts';
+import Loader from '../../components/loader/Loader.jsx';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const TechSupport = () => {
     // Sample complaints data
@@ -23,6 +24,7 @@ const TechSupport = () => {
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const [totalPages, setToatalPages] = useState(1);
+    const [loading, setIsLoading] = useState(true);
 
     const openModal = (complaint) => {
         handleGetTicketsById(complaint)
@@ -56,18 +58,20 @@ const TechSupport = () => {
     };
 
     const handleGetTickets = async () => {
+        setIsLoading(true);
         try {
             const response = await axios.get(`${BASE_URL}technical-support-tickets`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
             });
+            console.log(response.data.data)
             if (response.status === 200) {
                 setComplaints(response.data.data.list);
                 setItemPerPage(response.data.data.per_page);
                 setCurrentPage(response.data.data.current_page);
                 setToatalPages(response.data.data.total_pages);
-                console.log("response", response);
+                setIsLoading(false);
             }
         } catch (error) {
             console.error(error);
@@ -92,18 +96,20 @@ const TechSupport = () => {
         }
     }
 
-    const handleDeleteTicket = async () => {
+    const handleDeleteTicket = async (id) => {
         try {
-            const response = await axios.delete(`${BASE_URL}technical-support-tickets/${selectedComplaint.id}`, {
+            const response = await axios.delete(`${BASE_URL}technical-support-tickets/${id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
             });
             if (response.status === 204) {
+                toast.success("تم حذف الشكوى بنجاح")
                 await handleGetTickets();
             }
         } catch (error) {
             console.error(error);
+            toast.error(error.response?.data?.message );
         }
     }
 
@@ -116,6 +122,7 @@ const TechSupport = () => {
             }
         } catch (error) {
             console.error(error);
+            toast.error(error.response?.data?.message );
         }
     }
     const handleUpdateResponse = async (id, newText) => {
@@ -142,6 +149,7 @@ const TechSupport = () => {
             }
         } catch (err) {
             console.error("Update failed:", err);
+            toast.error(error.response?.data?.message );
         }
     };
 
@@ -164,11 +172,12 @@ const TechSupport = () => {
             }
         } catch (err) {
             console.error("Delete failed:", err);
+            toast.error(error.response?.data?.message );
         }
     };
     const handleChangeStatus = async (id, newStatus) => {
         try {
-            const res = await axios.patch(`${BASE_URL}technical-support-tickets/${id}/${newStatus}`,[], {
+            const res = await axios.patch(`${BASE_URL}technical-support-tickets/${id}/${newStatus}`, [], {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }
@@ -184,6 +193,7 @@ const TechSupport = () => {
             }
         } catch (err) {
             console.error("Status update failed:", err);
+            toast.error(error.response?.data?.message );
         }
     };
 
@@ -192,36 +202,41 @@ const TechSupport = () => {
     }, [])
 
     return (
-        <DashboardLayout>
-            <div className="p-4 md:p-6">
-                {/* Header */}
-                <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-                {/* Complaints Table */}
-                <Table
-                    openModal={openModal}
-                    currentItems={complaints}
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    filteredComplaints={complaints}
-                    indexOfFirstItem={indexOfFirstItem}
-                    indexOfLastItem={indexOfLastItem}
-                    totalPages={totalPages} />
+        <>
+            <ToastContainer></ToastContainer>
+            {loading ? <Loader></Loader> : <DashboardLayout>
+                <div className="p-4 md:p-6">
+                    {/* Header */}
+                    <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+                    {/* Complaints Table */}
+                    <Table
+                        openModal={openModal}
+                        currentItems={complaints}
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        filteredComplaints={complaints}
+                        indexOfFirstItem={indexOfFirstItem}
+                        indexOfLastItem={indexOfLastItem}
+                        handleDelete={handleDeleteTicket}
+                        totalPages={totalPages} />
 
-                {/* Complaint Modal */}
-                <ComplaintModal
-                    closeModal={closeModal}
-                    isModalOpen={isModalOpen}
-                    handleRespose={handleRespose}
-                    handleAccept={handleAccept}
-                    handleDeleteResponse={handleDeleteResponse}
-                    handleUpdateResponse={handleUpdateResponse}
-                    handleChangeStatus={handleChangeStatus}
-                    handleReject={handleReject}
-                    replyText={replyText}
-                    selectedComplaint={selectedComplaint}
-                    setReplyText={setReplyText} />
-            </div>
-        </DashboardLayout>
+                    {/* Complaint Modal */}
+                    <ComplaintModal
+                        closeModal={closeModal}
+                        isModalOpen={isModalOpen}
+                        handleRespose={handleRespose}
+                        handleAccept={handleAccept}
+                        handleDeleteResponse={handleDeleteResponse}
+                        handleUpdateResponse={handleUpdateResponse}
+                        handleChangeStatus={handleChangeStatus}
+                        handleReject={handleReject}
+                        replyText={replyText}
+                        selectedComplaint={selectedComplaint}
+                        setReplyText={setReplyText} />
+                </div>
+            </DashboardLayout>}
+        </>
+
     );
 };
 

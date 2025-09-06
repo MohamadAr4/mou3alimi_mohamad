@@ -78,7 +78,7 @@ function Subjects() {
       ) {
         toast.error("اسم المادة التعليمية موجود مسبقاً");
       } else {
-        toast.error(e.response.data.message.name);
+        toast.error(error.response.data.message.name);
       }
       console.error("Error adding subjects : ", error);
     }

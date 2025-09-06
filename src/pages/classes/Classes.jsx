@@ -2,6 +2,7 @@ import { useState, useEffect }   from "react";
 import axios                     from "axios";
 import { BASE_URL }              from "../../stores/contants";
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import DashboardLayout from "../dashboard/DashboardLayout";
 import Loader          from "../../components/loader/Loader";
 import Header          from "./components/header/Header";
@@ -10,7 +11,7 @@ import ShowModal       from "./components/Modals/ShowModal";
 import AddModal        from "./components/Modals/AddModal";
 import EditModal       from "./components/Modals/EditModal";
 import DeleteModal     from "./components/Modals/DeleteModal";
-import "react-toastify/dist/ReactToastify.css";
+
 
 function Classes() {
   // State for classes and subjects
@@ -104,9 +105,9 @@ function Classes() {
       if (
         error.response.data.message.name === "The name has already been taken."
       ) {
-        toast.error("اسم الفصل موجود مسبقاً");
+        toast.error(error.response?.data?.message );
       } else {
-        toast.error(e.response.data.message.name);
+        toast.error(error.response.data.message.name);
       }
     }
   };
@@ -159,7 +160,7 @@ function Classes() {
       }
     } catch (error) {
       console.error(error);
-      toast.error("فشل في حذف الفصل");
+      toast.error(error.response?.data?.message );
     }
   };
   // Done
@@ -178,7 +179,7 @@ function Classes() {
       }
     } catch (error) {
       console.error(error);
-      toast.error(error.response.message.name);
+      toast.error(error.response?.data?.message );
     }
   };
   // Done

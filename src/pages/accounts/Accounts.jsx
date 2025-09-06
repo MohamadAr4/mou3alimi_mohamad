@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import DashboardLayout from "../dashboard/DashboardLayout";
 import Table from "./components/Table";
-import AddModal from "./components/Modals/AddModal";
 import ViewModal from "./components/Modals/ViewModal";
 import axios from "axios";
 import { BASE_URL } from "../../stores/contants";
 import Loader from "../../components/loader/Loader";
 import BanModal from "./components/Modals/BanModal";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 function Accounts() {
   // Sample data
   const [accounts, setAccounts] = useState([]);
   // Loading state
   const [isLoading, setIsLoading] = useState(true);
   // Modal states
-  const [showAddModal, setShowAddModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [showBanModal, setShowBanModal] = useState(false);
   const [currentAccount, setCurrentAccount] = useState(null);
@@ -28,52 +27,10 @@ function Accounts() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const [totalPages, setTotalPages] = useState([]);
 
-  // Form state
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    role: "طالب",
-    status: "نشط",
-  });
-
-  // Handle form input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // Add new account
-  const handleAddAccount = () => {
-    const newAccount = {
-      id: accounts.length + 1,
-      ...formData,
-    };
-    setAccounts([...accounts, newAccount]);
-    setShowAddModal(false);
-    setFormData({ name: "", email: "", role: "طالب", status: "نشط" });
-  };
-
-  // Delete account
-  const handleDelete = (id) => {
-    setAccounts(accounts.filter((account) => account.id !== id));
-  };
-
   // View account details
   const handleView = (account) => {
     handleGetAccountById(account.id);
     setShowViewModal(true);
-  };
-
-  // Edit account
-  const handleEdit = (account) => {
-    setCurrentAccount(account);
-    setFormData({
-      name: account.name,
-      email: account.email,
-      role: account.role,
-      status: account.status,
-    });
-    setShowAddModal(true);
   };
 
   const handleGetAccounts = async () => {
@@ -91,6 +48,7 @@ function Accounts() {
         setCurrentPage(response.data.data.current_page);
         setItemPerPage(response.data.data.per_page);
         setTotalPages(response.data.data.total_pages);
+        setBanDate('');
         setIsLoading(false);
       }
     } catch (error) {
@@ -111,6 +69,7 @@ function Accounts() {
       if (response.status === 200) {
         setCurrentAccount(response.data.data);
         setIsLoading(false);
+        setBanDate('');
         console.log("account by id :", response);
       }
     } catch (error) {
@@ -134,17 +93,19 @@ function Accounts() {
           },
         }
       );
-      console.log(response);
       if (response.status === 200) {
         setShowBanModal(false);
         setShowViewModal(false);
         setIsSubmitting(false);
-        handleGetAccounts();
-        toast.success("تم حظر الحساب بنجاح");
+        await handleGetAccounts();
+        setTimeout(() => {
+          toast.success("تم حظر الحساب بنجاح");
+        }, 100);
+
       }
     } catch (error) {
       setIsSubmitting(false);
-      toast.error("خطأ في حظر الحساب");
+      toast.error(error.response?.data?.message.until_date);
       console.error("error ban an account : ", error);
     }
   };
@@ -164,26 +125,39 @@ function Accounts() {
       console.log(response);
       if (response.status === 200) {
         setShowViewModal(false);
-        handleGetAccounts();
-        toast.success("تم حظر الحساب بنجاح");
+        await handleGetAccounts();
+        setTimeout(() => {
+          toast.success("تم فك حظر الحساب بنجاح");
+        }, 100);
       }
     } catch (error) {
-      toast.error("خطأ في حظر الحساب");
+      toast.error(error.response?.data?.message);
       console.error("error ban an account : ", error);
     }
   };
 
   useEffect(() => {
     handleGetAccounts();
-  }, []);
+  }, [currentPage]);
 
   return (
-    <DashboardLayout>
-      <ToastContainer rtl={true}></ToastContainer>
+    <>
       {isLoading ? (
         <Loader></Loader>
       ) : (
-        <>
+        <DashboardLayout>
+          <ToastContainer
+            position="top-center"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={true}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
           <div className="p-6">
             {/* Header */}
             <div className="flex justify-between items-center mb-6">
@@ -194,26 +168,13 @@ function Accounts() {
             {/* Table  */}
             <Table
               accounts={accounts}
-              handleDelete={handleDelete}
               handleView={handleView}
-              handleEdit={handleEdit}
               currentPage={currentPage}
               indexOfFirstItem={indexOfFirstItem}
               indexOfLastItem={indexOfLastItem}
               setCurrentPage={setCurrentPage}
               totalPages={totalPages}
             ></Table>
-
-            {/* Add Account Modal */}
-            <AddModal
-              currentAccount={currentAccount}
-              formData={formData}
-              handleAddAccount={handleAddAccount}
-              handleInputChange={handleInputChange}
-              setCurrentAccount={setCurrentAccount}
-              setShowAddModal={setShowAddModal}
-              showAddModal={showAddModal}
-            ></AddModal>
 
             {/* View Account Modal */}
             <ViewModal
@@ -225,16 +186,16 @@ function Accounts() {
             ></ViewModal>
             <BanModal
               isOpen={showBanModal}
-              onClose={()=>{setShowBanModal(false)}}
+              onClose={() => { setShowBanModal(false) }}
               userName={currentAccount?.full_name}
               onBanSubmit={handleBanAccount}
               isSubmitting={isSubmitting}
               setBanDate={setBanDate}
             ></BanModal>
           </div>
-        </>
+        </DashboardLayout>
       )}
-    </DashboardLayout>
+    </>
   );
 }
 

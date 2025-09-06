@@ -59,13 +59,6 @@ function Edu_services_suggestions() {
         toast.success(
           `تم ${status === "approved" ? "الموافقة" : "الرفض"} على المقترح بنجاح`
         );
-        // setSuggestions(
-        //   suggestions.map((suggestion) =>
-        //     suggestion.id === selectedSuggestion.id
-        //       ? response.data.data
-        //       : suggestion
-        //   )
-        // );
         await getSuggestions();
         closeModal();
       }

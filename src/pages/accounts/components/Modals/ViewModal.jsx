@@ -1,10 +1,12 @@
 import React from "react";
 import { FiX, FiUser, FiPhone, FiMapPin, FiCalendar, FiBook, FiAward } from "react-icons/fi";
-
-function ViewModal({ showViewModal, currentAccount, setShowViewModal , setShowBanModal  , handleUnBanAccount}) {
+import "react-toastify/dist/ReactToastify.css";
+function ViewModal({ showViewModal, currentAccount, setShowViewModal, setShowBanModal, handleUnBanAccount }) {
   if (!showViewModal || !currentAccount) return null;
 
   const isTeacher = currentAccount.role === "teacher";
+  const isStudent = currentAccount.role === "student";
+  const isParent = currentAccount.role === "parent";
   const isBanned = currentAccount.status === "banned";
 
   return (
@@ -15,7 +17,7 @@ function ViewModal({ showViewModal, currentAccount, setShowViewModal , setShowBa
           <h2 className="text-xl font-bold text-white">
             {isTeacher ? "تفاصيل المعلم" : "تفاصيل الطالب"}
           </h2>
-          <button 
+          <button
             onClick={() => setShowViewModal(false)}
             className="text-white hover:text-gray-200"
           >
@@ -76,12 +78,12 @@ function ViewModal({ showViewModal, currentAccount, setShowViewModal , setShowBa
               <div>
                 <p className="text-sm font-medium text-gray-500">الحالة</p>
                 <div className="mt-1">
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    currentAccount.status === "active" 
-                      ? "bg-green-100 text-green-800" 
-                      : "bg-red-100 text-red-800"
-                  }`}>
-                    {currentAccount.status === "active" ? "نشط" : "محظور"}
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${currentAccount.status === "active"
+                    ? "bg-green-100 text-green-800"
+                    : "bg-red-100 text-red-800"
+                    }`}>
+                    {currentAccount.status}
+
                   </span>
                 </div>
               </div>
@@ -110,8 +112,8 @@ function ViewModal({ showViewModal, currentAccount, setShowViewModal , setShowBa
                 <div>
                   <p className="text-sm font-medium text-gray-500">سنوات الخبرة</p>
                   <p className="text-gray-900 font-medium">
-                    {currentAccount.profile.experience_years === "between_1_and_3_years" 
-                      ? "1-3 سنوات" 
+                    {currentAccount.profile.experience_years === "between_1_and_3_years"
+                      ? "1-3 سنوات"
                       : currentAccount.profile.experience_years}
                   </p>
                 </div>
@@ -144,7 +146,7 @@ function ViewModal({ showViewModal, currentAccount, setShowViewModal , setShowBa
           )}
 
           {/* Student Specific Info */}
-          {!isTeacher && (
+          {isStudent && (
             <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
               <div className="flex items-center gap-2 mb-3">
                 <div className="bg-[rgb(var(--primary)/0.1)] p-2 rounded-full text-[rgb(var(--primary))]">
@@ -156,18 +158,18 @@ function ViewModal({ showViewModal, currentAccount, setShowViewModal , setShowBa
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm font-medium text-gray-500">اسم المدرسة</p>
-                  <p className="text-gray-900 font-medium">{currentAccount.profile.school_name}</p>
+                  <p className="text-gray-900 font-medium">{currentAccount.profile?.school_name}</p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500">الصف</p>
-                  <p className="text-gray-900 font-medium">{currentAccount.profile.school_class.name}</p>
+                  <p className="text-gray-900 font-medium">{currentAccount.profile?.school_class.name}</p>
                 </div>
               </div>
 
               <div className="mt-4">
                 <p className="text-sm font-medium text-gray-500 mb-2">المواد الدراسية</p>
                 <div className="flex flex-wrap gap-2">
-                  {currentAccount.profile.subjects.map(subject => (
+                  {currentAccount.profile?.subjects.map(subject => (
                     <span key={subject.id} className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm">
                       {subject.name}
                     </span>
@@ -186,12 +188,17 @@ function ViewModal({ showViewModal, currentAccount, setShowViewModal , setShowBa
           >
             إغلاق
           </button>
-          <button
-            onClick={() =>  currentAccount.status === "active" ? setShowBanModal(true) : handleUnBanAccount()}
-            className="px-4 py-2 rounded-md bg-[rgb(var(--error))] text-white hover:bg-[rgb(var(--error)/0.9)] transition-colors mr-2"
-          >
-            {currentAccount.status === "active" ? "حظر" : "فك الحظر"}
-          </button>
+          {
+            currentAccount.status !== 'pending' && (
+              <button
+                onClick={() => currentAccount.status === "active" ? setShowBanModal(true) : handleUnBanAccount()}
+                className="px-4 py-2 rounded-md bg-[rgb(var(--error))] text-white hover:bg-[rgb(var(--error)/0.9)] transition-colors mr-2"
+              >
+                {currentAccount.status === "active" ? "حظر" : "فك الحظر"}
+              </button>
+            )
+          }
+
         </div>
       </div>
     </div>

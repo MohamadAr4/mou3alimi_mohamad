@@ -12,8 +12,7 @@ import TechSupport from "../pages/tech-support/TechSupport.jsx";
 import Subjects from "../pages/subjects/Subjects.jsx";
 import Classes from "../pages/classes/Classes.jsx";
 import Edu_services_suggestions from "../pages/edu-services-suggestions/Edu_services_suggestions.jsx";
-import FaqCategory from "../pages/faq_category/FaqCategory.jsx";
-import FAQ from "../pages/faq/FAQ.jsx";
+
 
 export const router = createBrowserRouter([
   {
@@ -68,14 +67,7 @@ export const router = createBrowserRouter([
         path : '/service-suggestions',
         element : <Edu_services_suggestions></Edu_services_suggestions>
       },
-      {
-        path : '/faq_categories',
-        element : <FaqCategory></FaqCategory>
-      },
-      {
-        path : '/FAQ',
-        element : <FAQ></FAQ>
-      }
+
     ],
   },
   // {
